@@ -11,7 +11,7 @@ export default async (
     >("notificationService")
 
     notificationService.subscribe(
-        "order.placed",
-        "<NOTIFICATION_PROVIDER_IDENTIFIER>"
+        "customer.created",
+        "email-sender"
     )
 }
