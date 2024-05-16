@@ -33,7 +33,6 @@ class EmailSenderService extends AbstractNotificationService {
         this.subject_customer = options.subject_customer
         this.orderTemplate = options.orderTemplate
         this.customerTemplate = options.customerTemplate
-
         this.orderService = container.orderService
         this.cartService = container.cartService
         this.transporter = nodemailer.createTransport({
@@ -78,8 +77,7 @@ class EmailSenderService extends AbstractNotificationService {
                 }
 
 
-            }).then((data) => { console.log(data) }).catch((e) => { console.log(e) });
-
+            })
             return {
                 to: order.email,
                 status: "done",
@@ -99,9 +97,7 @@ class EmailSenderService extends AbstractNotificationService {
                 }
 
 
-            }).then((data) => { console.log(data) }).catch((e) => { console.log(e) });
-
-
+            })
 
             return {
                 to: "",
