@@ -13,6 +13,11 @@ class EmailSenderService extends AbstractNotificationService {
     protected port: number
     protected username: string
     protected password: string
+    protected email_from: string
+    protected subject_order: string
+    protected subject_customer: string
+    protected customerTemplate: string
+    protected orderTemplate: string
     protected dirname: string
     protected transporter
 
@@ -23,6 +28,11 @@ class EmailSenderService extends AbstractNotificationService {
         this.username = options.username
         this.password = options.password
         this.dirname = options.dirname
+        this.email_from = options.email_from
+        this.subject_order = options.order
+        this.subject_customer = options.subject_customer
+        this.orderTemplate = options.orderTemplate
+        this.customerTemplate = options.customerTemplate
 
         this.orderService = container.orderService
         this.cartService = container.cartService
@@ -36,8 +46,6 @@ class EmailSenderService extends AbstractNotificationService {
             },
         });
 
-        console.log(__dirname)
-        console.log("dir", join(__dirname, "template"))
         this.transporter.use(
             "compile",
             nodemailerMjmlPlugin({ templateFolder: join(__dirname, "template") })
@@ -60,10 +68,10 @@ class EmailSenderService extends AbstractNotificationService {
             const items = order.items.map((item) => ({ title: item.title, thumbnail: item.thumbnail, price: (item.unit_price / 100).toLocaleString() }))
 
             await this.transporter.sendMail({
-                from: 'no-reply@owlbytech.com',
+                from: this.email_from,
                 to: data.email,
-                subject: 'Zacal compra',
-                templateName: "cartTemplate",
+                subject: this.subject_order,
+                templateName: this.orderTemplate,
                 templateData: {
                     items: items,
                     total: `${cart.total.toLocaleString()}`
@@ -81,12 +89,11 @@ class EmailSenderService extends AbstractNotificationService {
             }
         }
         if (event === "customer.created") {
-            console.log(data)
             await this.transporter.sendMail({
-                from: 'no-reply@owlbytech.com',
+                from: this.email_from,
                 to: data.email,
-                subject: 'Bienvendio a zacal ',
-                templateName: "customerTemplate",
+                subject: this.subject_customer,
+                templateName: this.customerTemplate,
                 templateData: {
                     name: data.first_name,
                 }
