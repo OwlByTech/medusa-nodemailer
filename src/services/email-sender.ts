@@ -29,7 +29,7 @@ class EmailSenderService extends AbstractNotificationService {
         this.password = options.password
         this.dirname = options.dirname
         this.email_from = options.email_from
-        this.subject_order = options.order
+        this.subject_order = options.subject_order
         this.subject_customer = options.subject_customer
         this.orderTemplate = options.orderTemplate
         this.customerTemplate = options.customerTemplate
@@ -47,7 +47,7 @@ class EmailSenderService extends AbstractNotificationService {
 
         this.transporter.use(
             "compile",
-            nodemailerMjmlPlugin({ templateFolder: join(__dirname, "template") })
+            nodemailerMjmlPlugin({ templateFolder: join(this.dirname) })
         );
     }
 
@@ -64,18 +64,21 @@ class EmailSenderService extends AbstractNotificationService {
         if (event === "order.placed") {
             const order: Order = await this.orderService.retrieve(data.id)
             const cart: Cart = await this.cartService.retrieveWithTotals(order.cart_id)
-            const items = order.items.map((item) => ({ title: item.title, thumbnail: item.thumbnail, price: (item.unit_price / 100).toLocaleString() }))
-
+            const items = []
+            for (var item of cart.items) {
+                items.push({ title: item.title, thumbnail: item.thumbnail, price: `$ ${(item.unit_price / 100).toLocaleString()}` })
+            }
             await this.transporter.sendMail({
                 from: this.email_from,
-                to: data.email,
+                to: order.email,
                 subject: this.subject_order,
                 templateName: this.orderTemplate,
                 templateData: {
                     items: items,
-                    total: `${cart.total.toLocaleString()}`
+                    subtotal: `$ ${(cart.subtotal / 100).toLocaleString()}`,
+                    shipping: `$ ${(cart.shipping_total / 100).toLocaleString()}`,
+                    total: `$ ${(cart.total / 100).toLocaleString()}`
                 }
-
 
             })
             return {
