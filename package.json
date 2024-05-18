@@ -1,8 +1,8 @@
 {
   "name": "medusa-nodemailer",
   "version": "0.0.1",
-  "description": "A starter for Medusa projects.",
-  "author": "Medusa (https://medusajs.com)",
+  "description": "A plugin medusajs for send email when customer registred and order placed" ,
+  "author": "Juan Camilo Arias ",
   "license": "MIT",
   "keywords": [
     "sqlite",
@@ -17,7 +17,7 @@
     "build": "cross-env npm run clean && npm run build:server && npm run build:admin",
     "build:server": "cross-env npm run clean && tsc -p tsconfig.json",
     "build:admin": "cross-env medusa-admin build",
-    "prepare": "cross-env NODE_ENV=production npm run build:server && medusa-admin bundle"
+    "prepare": "cross-env NODE_ENV=production npm run build:server"
   },
   "dependencies": {
     "dotenv": "16.4.5",
