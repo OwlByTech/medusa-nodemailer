@@ -25,6 +25,8 @@
     </mj-section>
     <mj-section background-color="#f3f3f3">
       <mj-column>
+        <mj-text font-size="15px" font-weight="bold" >Subtotal: {{subtotal}}</mj-text>
+        <mj-text font-size="15px" font-weight="bold" >Envío: {{shipping}}</mj-text>
         <mj-text font-size="15px" font-weight="bold" >Total: {{total}}</mj-text>
       </mj-column>
     </mj-section>
